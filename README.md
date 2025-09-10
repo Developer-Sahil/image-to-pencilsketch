@@ -18,6 +18,5 @@ This project transforms a colored image into a pencil sketch using OpenCV in Pyt
 
 3. Run the script:
    ```bash
-   python sketch.py
+   python app.py
 
-4. The output will be saved in the images/ folder
