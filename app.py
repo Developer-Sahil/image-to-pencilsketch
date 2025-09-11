@@ -38,6 +38,7 @@ def blur_image(image, kernel_size=(21, 21)):
 
 def dodge_blend(greyscale, inverted_blur):
     inverted_blur_safe = inverted_blur.astype(float) + 1e-5
+    greyscale_float = greyscale.astype(float)
     blend = cv2.divide(greyscale, 255 - inverted_blur_safe, scale=256)
     return np.clip(blend, 0, 255).astype(np.uint8)
 
