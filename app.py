@@ -24,6 +24,8 @@ def read_image(image_path):
     image = cv2.imread(image_path)
     if image is None:
         raise FileNotFoundError(f"Image not found at {image_path}")
+    else:
+        print("Image loaded Successfully")
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image_rgb
 
@@ -37,9 +39,10 @@ def blur_image(image, kernel_size=(21, 21)):
     return cv2.GaussianBlur(image, kernel_size, 0)
 
 def dodge_blend(greyscale, inverted_blur):
-    inverted_blur_safe = inverted_blur.astype(float) + 1e-5
-    greyscale_float = greyscale.astype(float)
-    blend = cv2.divide(greyscale, 255 - inverted_blur_safe, scale=256)
+    greyscale_float = greyscale.astype(np.float32)
+    inverted_blur_safe = inverted_blur.astype(np.float32) + 1e-5
+    divisor = 255 - inverted_blur_safe
+    blend = cv2.divide(greyscale_float, divisor, scale=256.0)
     return np.clip(blend, 0, 255).astype(np.uint8)
 
 def save_image(output_path, image):
@@ -61,6 +64,8 @@ def upload_file():
         unique_filename = f"{uuid.uuid4().hex}_{filename}"
         input_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
         file.save(input_path)
+        print(f"File saved at: {input_path}")
+        print(f"Exists: {os.path.exists(input_path)}")
 
         try:
             image_rgb = read_image(input_path)
